@@ -1,34 +1,2630 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta name="theme-color" content="#0a0a0f">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="description" content="Sonix AI - Professional AI Music Generator with Vocals & Instrumental">
-    <link rel="manifest" href="/manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonix AI - Create Professional Music with AI | AI Music Generator</title>
+    <meta name="description" content="Generate full songs with vocals, instrumental tracks, and studio-quality production in seconds. Free AI music generator for creators, producers, and artists.">
     
-    <!-- Favicon & Icons -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="icon" type="image/png" sizes="512x512" href="/assets/logo-512.png">
-    <link rel="apple-touch-icon" href="/assets/logo-512.png">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Sonix AI - Create Professional Music with AI">
+    <meta property="og:description" content="Generate full songs with vocals, instrumental tracks, and studio-quality production in seconds.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sonix.ai">
+    <meta property="og:image" content="https://sonix.ai/og-image.jpg">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sonix AI - Create Professional Music with AI">
+    <meta name="twitter:description" content="Generate full songs with vocals, instrumental tracks, and studio-quality production in seconds.">
+    
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Sonix AI Music Generator",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Web Browser",
+        "description": "AI-powered music generation platform for creating professional-quality songs with vocals.",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "ratingCount": "50000"
+        }
+    }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        #loader { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: #0a0a0f; }
-        .spinner { width: 48px; height: 48px; border: 3px solid #2a2a3a; border-top-color: #8b5cf6; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        body:not(.loaded) #app { display: none !important; }
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #16161f;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent-purple: #8b5cf6;
+            --accent-cyan: #06b6d4;
+            --accent-violet: #a78bfa;
+            --accent-orange: #f97316;
+            --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+            --gradient-hero: linear-gradient(-45deg, #8b5cf6, #06b6d4, #8b5cf6, #a78bfa);
+            --border-color: rgba(255,255,255,0.08);
+            --shadow-glow: 0 0 40px rgba(139,92,246,0.3);
+            --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+        }
+
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        button {
+            cursor: pointer;
+            border: none;
+            outline: none;
+            font-family: inherit;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* ===== ANIMATIONS KEYFRAMES ===== */
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(5deg); }
+            75% { transform: translateY(10px) rotate(-5deg); }
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(139,92,246,0.4), 0 0 40px rgba(6,182,212,0.2); }
+            50% { box-shadow: 0 0 30px rgba(139,92,246,0.6), 0 0 60px rgba(6,182,212,0.4); }
+        }
+        
+        @keyframes waveform {
+            0%, 100% { transform: scaleY(0.3); }
+            50% { transform: scaleY(1); }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes countUp {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes noteFloat {
+            0% { 
+                transform: translateY(100vh) rotate(0deg) scale(0);
+                opacity: 0;
+            }
+            10% { opacity: 1; transform: scale(1); }
+            90% { opacity: 1; }
+            100% { 
+                transform: translateY(-100vh) rotate(720deg) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes ripple {
+            0% { transform: scale(0); opacity: 0.5; }
+            100% { transform: scale(4); opacity: 0; }
+        }
+        
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+        
+        @keyframes textReveal {
+            from { opacity: 0; transform: translateY(20px); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+        
+        @keyframes borderGlow {
+            0%, 100% { border-color: rgba(139,92,246,0.5); }
+            33% { border-color: rgba(6,182,212,0.5); }
+            66% { border-color: rgba(167,139,250,0.5); }
+        }
+        
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        
+        @keyframes carouselSlide {
+            0%, 33% { transform: translateX(0); }
+            33.33%, 66% { transform: translateX(-100%); }
+            66.66%, 100% { transform: translateX(-200%); }
+        }
+        
+        /* ===== SCROLL ANIMATIONS ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+        .delay-5 { transition-delay: 0.5s; }
+        .delay-6 { transition-delay: 0.6s; }
+
+        /* ===== NAVIGATION ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 0;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+        
+        .navbar.scrolled {
+            background: rgba(10,10,15,0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 0;
+        }
+        
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(139,92,246,0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(139,92,246,0.5);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0) scale(0.98);
+        }
+        
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        
+        .btn-ghost:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.2);
+        }
+        
+        .btn-large {
+            padding: 16px 36px;
+            font-size: 1.1rem;
+            border-radius: var(--radius-lg);
+        }
+        
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+        
+        /* Mobile menu */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            padding: 8px;
+        }
+        
+        .mobile-menu-btn span {
+            width: 24px;
+            height: 2px;
+            background: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+        }
+        
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-hero);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+            opacity: 0.15;
+        }
+        
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(139,92,246,0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(6,182,212,0.3) 0%, transparent 50%);
+        }
+        
+        /* Floating music notes */
+        .music-particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: noteFloat linear infinite;
+            opacity: 0.6;
+        }
+        
+        .particle:nth-child(1) { left: 10%; animation-duration: 15s; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; animation-duration: 18s; animation-delay: 2s; }
+        .particle:nth-child(3) { left: 35%; animation-duration: 12s; animation-delay: 4s; }
+        .particle:nth-child(4) { left: 50%; animation-duration: 20s; animation-delay: 1s; }
+        .particle:nth-child(5) { left: 65%; animation-duration: 16s; animation-delay: 3s; }
+        .particle:nth-child(6) { left: 75%; animation-duration: 14s; animation-delay: 5s; }
+        .particle:nth-child(7) { left: 85%; animation-duration: 19s; animation-delay: 2.5s; }
+        .particle:nth-child(8) { left: 90%; animation-duration: 17s; animation-delay: 6s; }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(139,92,246,0.15);
+            border: 1px solid rgba(139,92,246,0.3);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: var(--accent-violet);
+            margin-bottom: 24px;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse-glow 2s infinite;
+        }
+        
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+            animation: fadeInUp 0.8s ease 0.1s forwards;
+            opacity: 0;
+        }
+        
+        .hero-title .gradient-text {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.35rem);
+            color: var(--text-secondary);
+            max-width: 650px;
+            margin: 0 auto 40px;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+        
+        /* Demo prompt input */
+        .demo-input-wrapper {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto 32px;
+            animation: fadeInUp 0.8s ease 0.3s forwards;
+            opacity: 0;
+        }
+        
+        .demo-input {
+            width: 100%;
+            padding: 20px 140px 20px 24px;
+            background: var(--bg-card);
+            border: 2px solid transparent;
+            border-radius: var(--radius-lg);
+            font-size: 1rem;
+            color: var(--text-primary);
+            outline: none;
+            transition: all 0.3s ease;
+            background-image: linear-gradient(var(--bg-card), var(--bg-card)), var(--gradient-primary);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            animation: borderGlow 4s linear infinite;
+        }
+        
+        .demo-input:focus {
+            box-shadow: 0 0 30px rgba(139,92,246,0.3), 0 0 60px rgba(6,182,212,0.2);
+        }
+        
+        .demo-input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .demo-input-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 14px 28px;
+        }
+        
+        /* Hero CTAs */
+        .hero-ctas {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+            opacity: 0;
+        }
+        
+        .hero-cta-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 12px 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .hero-cta-secondary:hover {
+            color: var(--text-primary);
+        }
+        
+        .play-icon {
+            width: 32px;
+            height: 32px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .hero-cta-secondary:hover .play-icon {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--accent-cyan);
+        }
+        
+        /* Social proof bar */
+        .social-proof {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-color);
+            animation: fadeInUp 0.8s ease 0.5s forwards;
+            opacity: 0;
+        }
+        
+        .proof-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .proof-value {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .proof-divider {
+            width: 1px;
+            height: 20px;
+            background: var(--border-color);
+        }
+        
+        /* Trusted by logos */
+        .trusted-by {
+            margin-top: 48px;
+            animation: fadeInUp 0.8s ease 0.6s forwards;
+            opacity: 0;
+        }
+        
+        .trusted-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+        
+        .logos-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+            opacity: 0.5;
+        }
+        
+        .logo-fake {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logo-fake svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        /* ===== STATS SECTION ===== */
+        .stats-section {
+            padding: 80px 0;
+            background: var(--bg-secondary);
+            position: relative;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== TESTIMONIALS SECTION ===== */
+        .testimonials-section {
+            padding: 100px 0;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 64px;
+        }
+        
+        .section-tag {
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-purple);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+        
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 16px;
+        }
+        
+        .section-desc {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+        
+        .testimonials-carousel {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .testimonials-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        
+        .testimonial-card {
+            flex: 0 0 100%;
+            padding: 0 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .testimonial-card {
+                flex: 0 0 50%;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .testimonial-card {
+                flex: 0 0 33.333%;
+            }
+        }
+        
+        .testimonial-inner {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .testimonial-inner:hover {
+            border-color: rgba(139,92,246,0.3);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .testimonial-stars {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+            color: #fbbf24;
+        }
+        
+        .testimonial-text {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .author-info h4 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .author-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 32px;
+        }
+        
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border-color);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-dot.active {
+            background: var(--accent-purple);
+            width: 32px;
+            border-radius: 5px;
+        }
+        
+        /* Press logos */
+        .press-logos {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+            margin-top: 64px;
+            padding-top: 48px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .press-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+        
+        .press-logo:hover {
+            opacity: 1;
+            color: var(--text-secondary);
+        }
+
+        /* ===== FEATURES SECTION ===== */
+        .features-section {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+        }
+        
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(139,92,246,0.1) 0%, rgba(6,182,212,0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(139,92,246,0.4);
+            box-shadow: 0 20px 60px rgba(139,92,246,0.15), 0 0 40px rgba(6,182,212,0.1);
+        }
+        
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, rgba(139,92,246,0.2) 0%, rgba(6,182,212,0.2) 100%);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .feature-card:hover .feature-icon {
+            animation: iconPulse 0.6s ease;
+            background: var(--gradient-primary);
+        }
+        
+        .feature-title {
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .feature-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .feature-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent-purple);
+            font-weight: 600;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-link:hover {
+            gap: 12px;
+            color: var(--accent-cyan);
+        }
+
+        /* ===== DEMO SECTION ===== */
+        .demo-section {
+            padding: 100px 0;
+        }
+        
+        .demo-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: 48px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .demo-player {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        
+        .player-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        
+        .track-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .track-artwork {
+            width: 64px;
+            height: 64px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .track-details h4 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+        
+        .track-details p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .play-btn-main {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .play-btn-main:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(139,92,246,0.5);
+        }
+        
+        .waveform-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            height: 60px;
+            margin-bottom: 24px;
+        }
+        
+        .waveform-bar {
+            width: 4px;
+            background: var(--accent-purple);
+            border-radius: 2px;
+            transform-origin: bottom;
+            animation: waveform 0.8s ease-in-out infinite paused;
+        }
+        
+        .waveform-bar.playing {
+            animation-play-state: running;
+        }
+        
+        .genre-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .genre-pill {
+            padding: 8px 18px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 100px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .genre-pill:hover,
+        .genre-pill.active {
+            background: var(--gradient-primary);
+            border-color: transparent;
+            color: white;
+        }
+        
+        .generation-status {
+            text-align: center;
+            padding: 20px;
+            background: rgba(139,92,246,0.1);
+            border-radius: var(--radius-md);
+            margin-top: 24px;
+            display: none;
+        }
+        
+        .generation-status.generating {
+            display: block;
+        }
+        
+        .status-text {
+            color: var(--accent-purple);
+            font-weight: 600;
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* ===== HOW IT WORKS SECTION ===== */
+        .how-it-works {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+        
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 48px;
+            position: relative;
+        }
+        
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 60px;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            opacity: 0.3;
+        }
+        
+        @media (max-width: 900px) {
+            .steps-container::before {
+                display: none;
+            }
+        }
+        
+        .step-card {
+            text-align: center;
+            position: relative;
+        }
+        
+        .step-number {
+            width: 72px;
+            height: 72px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+            margin: 0 auto 24px;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+        
+        .step-card:hover .step-number {
+            background: var(--gradient-primary);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(139,92,246,0.4);
+        }
+        
+        .step-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+        
+        .step-title {
+            font-size: 1.35rem;
+            margin-bottom: 12px;
+        }
+        
+        .step-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* ===== MODES SECTION ===== */
+        .modes-section {
+            padding: 100px 0;
+        }
+        
+        .modes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        
+        .mode-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mode-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--mode-color, var(--accent-purple));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .mode-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--mode-color, var(--accent-purple));
+        }
+        
+        .mode-card:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .mode-card[data-mode="simple"] { --mode-color: #8b5cf6; }
+        .mode-card[data-mode="custom"] { --mode-color: #06b6d4; }
+        .mode-card[data-mode="studio"] { --mode-color: #f97316; }
+        .mode-card[data-mode="composer"] { --mode-color: #a78bfa; }
+        .mode-card[data-mode="sound-design"] { --mode-color: #22d3ee; }
+        
+        .mode-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--mode-color, var(--accent-purple));
+        }
+        
+        .mode-for {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+        
+        .mode-best {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius-sm);
+        }
+
+        /* ===== PRICING SECTION ===== */
+        .pricing-section {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .pricing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: 40px 32px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .pricing-card.featured {
+            border-color: var(--accent-purple);
+            transform: scale(1.05);
+            box-shadow: 0 0 60px rgba(139,92,246,0.2);
+        }
+        
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient-primary);
+            padding: 6px 20px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-8px);
+        }
+        
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-8px);
+        }
+        
+        .plan-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .plan-price {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .plan-price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+        
+        .plan-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 28px;
+        }
+        
+        .plan-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 32px;
+        }
+        
+        .plan-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .check-icon {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .pricing-cta {
+            width: 100%;
+        }
+        
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        
+        .badge svg {
+            width: 16px;
+            height: 16px;
+            color: #22c55e;
+        }
+
+        /* ===== FAQ SECTION ===== */
+        .faq-section {
+            padding: 100px 0;
+        }
+        
+        .faq-list {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item:hover {
+            border-color: rgba(139,92,246,0.3);
+        }
+        
+        .faq-question {
+            width: 100%;
+            padding: 20px 24px;
+            background: var(--bg-card);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            background: rgba(139,92,246,0.05);
+        }
+        
+        .faq-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .faq-item.active .faq-icon {
+            background: var(--accent-purple);
+            transform: rotate(45deg);
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+        }
+        
+        .faq-answer-inner {
+            padding: 0 24px 20px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ===== FINAL CTA SECTION ===== */
+        .final-cta {
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .final-cta-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(139,92,246,0.2) 0%, rgba(6,182,212,0.2) 100%);
+            animation: gradientFlow 10s ease infinite;
+            background-size: 400% 400%;
+        }
+        
+        .final-cta-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .final-cta h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 16px;
+        }
+        
+        .final-cta p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+        
+        .email-signup {
+            display: flex;
+            gap: 12px;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+        
+        .email-input {
+            flex: 1;
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .email-input:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 20px rgba(139,92,246,0.2);
+        }
+        
+        .generate-btn {
+            padding: 16px 32px;
+            white-space: nowrap;
+            animation: pulse-glow 3s infinite;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 60px 0 30px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr repeat(3, 1fr);
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .footer-brand p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 16px;
+            max-width: 280px;
+        }
+        
+        .footer-col h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-purple);
+        }
+        
+        .footer-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .copyright {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .demo-input {
+                padding-right: 24px;
+                padding-bottom: 80px;
+            }
+            
+            .demo-input-btn {
+                position: static;
+                transform: none;
+                width: 100%;
+                margin-top: 12px;
+            }
+            
+            .social-proof {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .proof-divider {
+                display: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+            
+            .pricing-card.featured:hover {
+                transform: translateY(-8px);
+            }
+            
+            .email-signup {
+                flex-direction: column;
+            }
+            
+            .steps-container::before {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+            
+            .demo-container {
+                padding: 24px;
+            }
+            
+            .modes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
-    <title>Sonix AI Music Generator</title>
 </head>
-<body class="bg-[#0a0a0f] text-white antialiased">
-    <div id="loader"><div class="spinner"></div></div>
-    <div id="app"></div>
-    <div id="toast-container" class="fixed top-4 right-4 z-[10000] flex flex-col gap-2 pointer-events-none"></div>
-    <div id="modal-container" class="fixed inset-0 z-[10001] hidden"></div>
-    <link rel="stylesheet" href="/css/themes.css">
-    <link rel="stylesheet" href="/css/app.css">
-    <link rel="stylesheet" href="/css/components.css">
-    <script type="module" src="/js/app.js"></script>
+<body>
+    <!-- Navigation -->
+    <header class="navbar" id="navbar">
+        <div class="container nav-content">
+            <a href="#" class="logo">
+                <div class="logo-icon">♫</div>
+                <span>Sonix</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#modes">Modes</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            
+            <div class="nav-actions">
+                <button class="btn btn-ghost">Sign In</button>
+                <button class="btn btn-primary">Get Started</button>
+                <button class="mobile-menu-btn" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <div class="hero-bg"></div>
+            
+            <!-- Floating particles -->
+            <div class="music-particles" aria-hidden="true">
+                <span class="particle">♪</span>
+                <span class="particle">♫</span>
+                <span class="particle">♬</span>
+                <span class="particle">♩</span>
+                <span class="particle">♪</span>
+                <span class="particle">♫</span>
+                <span class="particle">♬</span>
+                <span class="particle">♩</span>
+            </div>
+            
+            <div class="container hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    Now with v3.0 — Human-like Vocals
+                </div>
+                
+                <h1 class="hero-title">
+                    Create Professional Music<br>with <span class="gradient-text">AI</span>
+                </h1>
+                
+                <p class="hero-subtitle">
+                    Generate full songs with vocals, instrumental tracks, and studio-quality production in seconds. No experience needed.
+                </p>
+                
+                <div class="demo-input-wrapper">
+                    <input type="text" class="demo-input" placeholder="Describe your song... e.g., 'An upbeat pop anthem about summer nights'" aria-label="Song description">
+                    <button class="btn btn-primary demo-input-btn">Generate →</button>
+                </div>
+                
+                <div class="hero-ctas">
+                    <button class="btn btn-primary btn-large">Start Creating Free</button>
+                    <a href="#demo" class="hero-cta-secondary">
+                        <span class="play-icon">▶</span>
+                        Watch Demo
+                    </a>
+                </div>
+                
+                <div class="social-proof">
+                    <div class="proof-item">
+                        <span class="proof-value">10M+</span>
+                        <span>songs created</span>
+                    </div>
+                    <div class="proof-divider"></div>
+                    <div class="proof-item">
+                        <span class="proof-value">500K+</span>
+                        <span>creators</span>
+                    </div>
+                    <div class="proof-divider"></div>
+                    <div class="proof-item">
+                        <span class="proof-value">4.9★</span>
+                        <span>rating</span>
+                    </div>
+                </div>
+                
+                <div class="trusted-by">
+                    <p class="trusted-label">Trusted by creators at</p>
+                    <div class="logos-row">
+                        <div class="logo-fake">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            Spotify
+                        </div>
+                        <div class="logo-fake">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                            Apple Music
+                        </div>
+                        <div class="logo-fake">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                            YouTube
+                        </div>
+                        <div class="logo-fake">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/></svg>
+                            TikTok
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section" aria-label="Statistics">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-item reveal">
+                        <div class="stat-number" data-target="10000000">0</div>
+                        <div class="stat-label">Songs Generated</div>
+                    </div>
+                    <div class="stat-item reveal delay-1">
+                        <div class="stat-number" data-target="500000">0</div>
+                        <div class="stat-label">Active Creators</div>
+                    </div>
+                    <div class="stat-item reveal delay-2">
+                        <div class="stat-number" data-target="2500000">0</div>
+                        <div class="stat-label">Hours of Music</div>
+                    </div>
+                    <div class="stat-item reveal delay-3">
+                        <div class="stat-number" data-target="150">0</div>
+                        <div class="stat-label">Countries</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials-section" aria-label="Testimonials">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">Testimonials</span>
+                    <h2 class="section-title">Loved by Creators Worldwide</h2>
+                    <p class="section-desc">See what musicians, content creators, and game developers are saying about Sonix AI.</p>
+                </div>
+                
+                <div class="testimonials-carousel reveal">
+                    <div class="testimonials-track" id="testimonialsTrack">
+                        <article class="testimonial-card">
+                            <div class="testimonial-inner">
+                                <div class="testimonial-stars">★★★★★</div>
+                                <p class="testimonial-text">"Sonix has completely transformed my workflow. I can now produce radio-ready tracks in minutes instead of weeks. The vocal quality is absolutely insane."</p>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">MK</div>
+                                    <div class="author-info">
+                                        <h4>Marcus Kim</h4>
+                                        <p>Music Producer, LA</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="testimonial-card">
+                            <div class="testimonial-inner">
+                                <div class="testimonial-stars">★★★★★</div>
+                                <p class="testimonial-text">"As a YouTuber who needs fresh background music daily, Sonix is a game-changer. The commercial license gives me total peace of mind."</p>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">SR</div>
+                                    <div class="author-info">
+                                        <h4>Sarah Rodriguez</h4>
+                                        <p>Content Creator, 2M subs</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="testimonial-card">
+                            <div class="testimonial-inner">
+                                <div class="testimonial-stars">★★★★★</div>
+                                <p class="testimonial-text">"We use Sonix for all our game soundtracks now. The ability to generate adaptive music that matches gameplay moments is revolutionary."</p>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">JT</div>
+                                    <div class="author-info">
+                                        <h4>James Thompson</h4>
+                                        <p>Game Developer, Indie Studio</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="testimonial-card">
+                            <div class="testimonial-inner">
+                                <div class="testimonial-stars">★★★★★</div>
+                                <p class="testimonial-text">"I was skeptical about AI music until I tried Sonix. The emotional depth and musicality of the output genuinely surprised me. It's like having a co-writer."</p>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">EL</div>
+                                    <div class="author-info">
+                                        <h4>Elena Lopez</h4>
+                                        <p>Songwriter & Artist</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    
+                    <div class="carousel-dots">
+                        <button class="carousel-dot active" data-slide="0" aria-label="Go to slide 1"></button>
+                        <button class="carousel-dot" data-slide="1" aria-label="Go to slide 2"></button>
+                        <button class="carousel-dot" data-slide="2" aria-label="Go to slide 3"></button>
+                    </div>
+                </div>
+                
+                <div class="press-logos reveal">
+                    <span class="press-logo">TechCrunch</span>
+                    <span class="press-logo">The Verge</span>
+                    <span class="press-logo">Wired</span>
+                    <span class="press-logo">Forbes</span>
+                    <span class="press-logo">Billboard</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section" id="features" aria-label="Features">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">Features</span>
+                    <h2 class="section-title">Everything You Need to Create</h2>
+                    <p class="section-desc">Professional-grade tools powered by cutting-edge AI technology.</p>
+                </div>
+                
+                <div class="features-grid">
+                    <article class="feature-card reveal delay-1">
+                        <div class="feature-icon">🎤</div>
+                        <h3 class="feature-title">Full Song Generation with Vocals</h3>
+                        <p class="feature-desc">AI vocals that sound human, not robotic. Choose from multiple voice styles, languages, and emotional expressions.</p>
+                        <a href="#" class="feature-link">Learn more →</a>
+                    </article>
+                    
+                    <article class="feature-card reveal delay-2">
+                        <div class="feature-icon">🎹</div>
+                        <h3 class="feature-title">100+ Genre Templates</h3>
+                        <p class="feature-desc">From Lo-Fi to Orchestral, Hip-Hop to Classical — every style covered with professionally crafted templates.</p>
+                        <a href="#" class="feature-link">Learn more →</a>
+                    </article>
+                    
+                    <article class="feature-card reveal delay-3">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title">5 Pro Modes</h3>
+                        <p class="feature-desc">Simple → Custom → Studio → Composer → Sound Designer. Scale complexity based on your expertise level.</p>
+                        <a href="#" class="feature-link">Learn more →</a>
+                    </article>
+                    
+                    <article class="feature-card reveal delay-4">
+                        <div class="feature-icon">🎛️</div>
+                        <h3 class="feature-title">Studio Controls</h3>
+                        <p class="feature-desc">BPM, Key, Structure, Mixing — all adjustable. Fine-tune every aspect of your composition like a pro.</p>
+                        <a href="#" class="feature-link">Learn more →</a>
+                    </article>
+                    
+                    <article class="feature-card reveal delay-5">
+                        <div class="feature-icon">📥</div>
+                        <h3 class="feature-title">Instant Download</h3>
+                        <p class="feature-desc">WAV, MP3, FLAC formats available. Stem separation included — isolate vocals, drums, bass, and more.</p>
+                        <a href="#" class="feature-link">Learn more →</a>
+                    </article>
+                    
+                    <article class="feature-card reveal delay-6">
+                        <div class="feature-icon">🔒</div>
+                        <h3 class="feature-title">Commercial License</h3>
+                        <p class="feature-desc">Use in videos, games, podcasts, commercials — fully royalty-free. Keep 100% of your earnings.</p>
+                        <a href="#" class="feature-link">Learn more →</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Demo Section -->
+        <section class="demo-section" id="demo" aria-label="Interactive Demo">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">Try It Now</span>
+                    <h2 class="section-title">See the Magic Happen</h2>
+                    <p class="section-desc">Experience how easy it is to generate professional music.</p>
+                </div>
+                
+                <div class="demo-container reveal">
+                    <div class="demo-player">
+                        <div class="player-header">
+                            <div class="track-info">
+                                <div class="track-artwork">🎵</div>
+                                <div class="track-details">
+                                    <h4>Midnight Dreams</h4>
+                                    <p>Lo-Fi Hip-Hop • Generated by AI</p>
+                                </div>
+                            </div>
+                            <button class="play-btn-main" id="playBtn" aria-label="Play/Pause">▶</button>
+                        </div>
+                        
+                        <div class="waveform-display" id="waveform">
+                            <!-- Waveform bars generated by JS -->
+                        </div>
+                        
+                        <div class="genre-pills">
+                            <button class="genre-pill active" data-genre="lofi" style="--color: #8b5cf6">Lo-Fi</button>
+                            <button class="genre-pill" data-genre="electronic" style="--color: #06b6d4">Electronic</button>
+                            <button class="genre-pill" data-genre="pop" style="--color: #f97316">Pop</button>
+                            <button class="genre-pill" data-genre="rock" style="--color: #ef4444">Rock</button>
+                            <button class="genre-pill" data-genre="jazz" style="--color: #eab308">Jazz</button>
+                            <button class="genre-pill" data-genre="classical" style="--color: #a78bfa">Classical</button>
+                        </div>
+                        
+                        <div class="generation-status" id="genStatus">
+                            <p class="status-text" id="statusText">Generating...</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-it-works" aria-label="How It Works">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">How It Works</span>
+                    <h2 class="section-title">Three Steps to Your Next Hit</h2>
+                    <p class="section-desc">Creating professional music has never been easier.</p>
+                </div>
+                
+                <div class="steps-container">
+                    <div class="step-card reveal delay-1">
+                        <div class="step-number">1</div>
+                        <div class="step-icon">✍️</div>
+                        <h3 class="step-title">Describe Your Vision</h3>
+                        <p class="step-desc">Type what you want or hum a melody. Our AI understands context, mood, and style.</p>
+                    </div>
+                    
+                    <div class="step-card reveal delay-2">
+                        <div class="step-number">2</div>
+                        <div class="step-icon">🎨</div>
+                        <h3 class="step-title">Customize Everything</h3>
+                        <p class="step-desc">Choose genre, mood, vocals, tempo, structure. Fine-tune until it's perfect.</p>
+                    </div>
+                    
+                    <div class="step-card reveal delay-3">
+                        <div class="step-number">3</div>
+                        <div class="step-icon">💾</div>
+                        <h3 class="step-title">Download & Use</h3>
+                        <p class="step-desc">Get your track in any format. Full commercial license included. Start using instantly.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modes Section -->
+        <section class="modes-section" id="modes" aria-label="Modes">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">Modes</span>
+                    <h2 class="section-title">Five Ways to Create</h2>
+                    <p class="section-desc">From beginners to professionals — there's a mode for everyone.</p>
+                </div>
+                
+                <div class="modes-grid">
+                    <article class="mode-card reveal delay-1" data-mode="simple">
+                        <h3 class="mode-name">Simple</h3>
+                        <p class="mode-for">For Beginners</p>
+                        <p class="mode-best">Quick ideas, 30-second clips, instant results</p>
+                    </article>
+                    
+                    <article class="mode-card reveal delay-2" data-mode="custom">
+                        <h3 class="mode-name">Custom</h3>
+                        <p class="mode-for">For Power Users</p>
+                        <p class="mode-best">Full control over genre, mood, instruments</p>
+                    </article>
+                    
+                    <article class="mode-card reveal delay-3" data-mode="studio">
+                        <h3 class="mode-name">Studio</h3>
+                        <p class="mode-for">For Producers</p>
+                        <p class="mode-best">Beatmaking, loops, stem separation</p>
+                    </article>
+                    
+                    <article class="mode-card reveal delay-4" data-mode="composer">
+                        <h3 class="mode-name">Composer</h3>
+                        <p class="mode-for">For Songwriters</p>
+                        <p class="mode-best">Full arrangements, chord progressions</p>
+                    </article>
+                    
+                    <article class="mode-card reveal delay-5" data-mode="sound-design">
+                        <h3 class="mode-name">Sound Design</h3>
+                        <p class="mode-for">For Engineers</p>
+                        <p class="mode-best">SFX, layers, cinematic textures</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section class="pricing-section" id="pricing" aria-label="Pricing">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">Pricing</span>
+                    <h2 class="section-title">Start Free, Scale as You Grow</h2>
+                    <p class="section-desc">No hidden fees. Cancel anytime.</p>
+                </div>
+                
+                <div class="pricing-grid">
+                    <article class="pricing-card reveal delay-1">
+                        <h3 class="plan-name">Free</h3>
+                        <div class="plan-price">$0<span>/mo</span></div>
+                        <p class="plan-desc">Perfect for trying out</p>
+                        <ul class="plan-features">
+                            <li><span class="check-icon">✓</span> 10 songs per month</li>
+                            <li><span class="check-icon">✓</span> MP3 downloads</li>
+                            <li><span class="check-icon">✓</span> Basic genres</li>
+                            <li><span class="check-icon">✓</span> Non-commercial use</li>
+                        </ul>
+                        <button class="btn btn-ghost pricing-cta">Get Started</button>
+                    </article>
+                    
+                    <article class="pricing-card featured reveal delay-2">
+                        <h3 class="plan-name">Pro</h3>
+                        <div class="plan-price">$10<span>/mo</span></div>
+                        <p class="plan-desc">For serious creators</p>
+                        <ul class="plan-features">
+                            <li><span class="check-icon">✓</span> Unlimited songs</li>
+                            <li><span class="check-icon">✓</span> WAV, FLAC, Stems</li>
+                            <li><span class="check-icon">✓</span> All 100+ genres</li>
+                            <li><span class="check-icon">✓</span> Commercial license</li>
+                            <li><span class="check-icon">✓</span> Priority generation</li>
+                            <li><span class="check-icon">✓</span> Vocal generation</li>
+                        </ul>
+                        <button class="btn btn-primary pricing-cta">Start Free Trial</button>
+                    </article>
+                    
+                    <article class="pricing-card reveal delay-3">
+                        <h3 class="plan-name">Enterprise</h3>
+                        <div class="plan-price">Custom</div>
+                        <p class="plan-desc">For teams & businesses</p>
+                        <ul class="plan-features">
+                            <li><span class="check-icon">✓</span> Everything in Pro</li>
+                            <li><span class="check-icon">✓</span> API access</li>
+                            <li><span class="check-icon">✓</span> Custom models</li>
+                            <li><span class="check-icon">✓</span> Dedicated support</li>
+                            <li><span class="check-icon">✓</span> SLA guarantee</li>
+                        </ul>
+                        <button class="btn btn-ghost pricing-cta">Contact Sales</button>
+                    </article>
+                </div>
+                
+                <div class="badges reveal">
+                    <span class="badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        No credit card required
+                    </span>
+                    <span class="badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        14-day money-back guarantee
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section" id="faq" aria-label="FAQ">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">FAQ</span>
+                    <h2 class="section-title">Frequently Asked Questions</h2>
+                    <p class="section-desc">Everything you need to know about Sonix AI.</p>
+                </div>
+                
+                <div class="faq-list reveal">
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Is it really free to get started?
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Yes! Our Free plan lets you generate up to 10 songs per month at no cost. No credit card required to sign up. Upgrade to Pro when you're ready for unlimited creation.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Can I use the music commercially?
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Absolutely! With our Pro plan, you get a full commercial license. Use your creations in YouTube videos, podcasts, games, commercials, and more — keep 100% of your earnings.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            How good are the AI vocals?
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Our v3.0 vocal engine produces remarkably human-like singing. Multiple voice styles, languages, and emotional expressions are supported. Many users can't tell the difference from human vocals!
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            What formats can I download in?
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                We offer MP3 (compressed), WAV (lossless), and FLAC (high-quality lossless). Pro users also get stem separation — download individual tracks for vocals, drums, bass, and other instruments.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Do I own the copyright?
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Yes! When you generate music on Sonix, you own full copyright to your creations. Use them however you want — no attribution required, no royalties to pay.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Can I cancel anytime?
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Of course! There are no long-term contracts. Cancel your subscription at any time from your account settings. We also offer a 14-day money-back guarantee on Pro plans.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA Section -->
+        <section class="final-cta" aria-label="Call to Action">
+            <div class="final-cta-bg"></div>
+            <div class="container final-cta-content reveal">
+                <h2>Ready to Create Your Next Hit?</h2>
+                <p>Join 500,000+ creators already making amazing music with AI.</p>
+                
+                <form class="email-signup" onsubmit="return false;">
+                    <input type="email" class="email-input" placeholder="Enter your email" aria-label="Email address" required>
+                    <button type="submit" class="btn btn-primary generate-btn">Start Creating →</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <div class="logo-icon">♫</div>
+                        <span>Sonix</span>
+                    </a>
+                    <p>The most advanced AI music generator. Create professional songs in seconds.</p>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul class="footer-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#modes">Modes</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#">API</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Community</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="copyright">© 2026 Sonix AI. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link" aria-label="Twitter">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Instagram">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                    </a>
+                    <a href="#" class="social-link" aria-label="YouTube">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Discord">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ===== INTERSECTION OBSERVER FOR SCROLL ANIMATIONS =====
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    
+                    // Trigger counter animation if stat number
+                    if (entry.target.querySelector('.stat-number')) {
+                        animateCounter(entry.target.querySelector('.stat-number'));
+                    }
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ===== NAVBAR SCROLL EFFECT =====
+        const navbar = document.getElementById('navbar');
+        let lastScroll = 0;
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        // ===== COUNTER ANIMATION =====
+        function animateCounter(element) {
+            const target = parseInt(element.dataset.target);
+            const duration = 2000;
+            const start = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - start;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing function
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(easeOut * target);
+                
+                // Format number
+                if (target >= 1000000) {
+                    element.textContent = (current / 1000000).toFixed(1) + 'M+';
+                } else if (target >= 1000) {
+                    element.textContent = (current / 1000).toFixed(0) + 'K+';
+                } else {
+                    element.textContent = current + '+';
+                }
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        // ===== RIPPLE EFFECT ON BUTTONS =====
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const rect = this.getBoundingClientRect();
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple-effect';
+                ripple.style.left = (e.clientX - rect.left) + 'px';
+                ripple.style.top = (e.clientY - rect.top) + 'px';
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // ===== WAVEFORM GENERATION =====
+        const waveformContainer = document.getElementById('waveform');
+        const barCount = 60;
+        
+        for (let i = 0; i < barCount; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'waveform-bar';
+            bar.style.height = Math.random() * 40 + 10 + 'px';
+            bar.style.animationDelay = (i * 0.05) + 's';
+            waveformContainer.appendChild(bar);
+        }
+
+        // ===== PLAY BUTTON FUNCTIONALITY =====
+        const playBtn = document.getElementById('playBtn');
+        const waveformBars = document.querySelectorAll('.waveform-bar');
+        let isPlaying = false;
+        
+        playBtn.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            playBtn.textContent = isPlaying ? '⏸' : '▶';
+            
+            waveformBars.forEach(bar => {
+                if (isPlaying) {
+                    bar.classList.add('playing');
+                } else {
+                    bar.classList.remove('playing');
+                }
+            });
+        });
+
+        // ===== GENRE PILLS =====
+        const genrePills = document.querySelectorAll('.genre-pill');
+        const genreColors = {
+            lofi: '#8b5cf6',
+            electronic: '#06b6d4',
+            pop: '#f97316',
+            rock: '#ef4444',
+            jazz: '#eab308',
+            classical: '#a78bfa'
+        };
+        
+        genrePills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                genrePills.forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+                
+                const genre = pill.dataset.genre;
+                const color = genreColors[genre];
+                
+                // Update waveform colors
+                waveformBars.forEach((bar, i) => {
+                    bar.style.background = color;
+                    bar.style.height = Math.random() * 40 + 10 + 'px';
+                });
+                
+                // Show generating status
+                showGenerationStatus();
+            });
+        });
+
+        // ===== GENERATION STATUS =====
+        function showGenerationStatus() {
+            const statusEl = document.getElementById('genStatus');
+            const statusText = document.getElementById('statusText');
+            const progressFill = document.getElementById('progressFill');
+            
+            statusEl.classList.add('generating');
+            statusText.textContent = 'Generating...';
+            progressFill.style.width = '0%';
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    statusText.textContent = '✓ Complete!';
+                    
+                    setTimeout(() => {
+                        statusEl.classList.remove('generating');
+                    }, 2000);
+                }
+                progressFill.style.width = progress + '%';
+            }, 200);
+        }
+
+        // ===== FAQ ACCORDION =====
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            
+            question.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                
+                // Close all items
+                faqItems.forEach(i => i.classList.remove('active'));
+                
+                // Open clicked item if it wasn't active
+                if (!isActive) {
+                    item.classList.add('active');
+                    question.setAttribute('aria-expanded', 'true');
+                } else {
+                    question.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+
+        // ===== CAROUSEL =====
+        const track = document.getElementById('testimonialsTrack');
+        const dots = document.querySelectorAll('.carousel-dot');
+        let currentSlide = 0;
+        
+        function goToSlide(index) {
+            currentSlide = index;
+            const cardWidth = document.querySelector('.testimonial-card').offsetWidth;
+            track.style.transform = `translateX(-${index * cardWidth}px)`;
+            
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+        
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                goToSlide(parseInt(dot.dataset.slide));
+            });
+        });
+        
+        // Auto-advance carousel
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % 3;
+            goToSlide(currentSlide);
+        }, 5000);
+
+        // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ===== PARALLAX EFFECT ON HERO =====
+        const heroContent = document.querySelector('.hero-content');
+        const particles = document.querySelector('.music-particles');
+        
+        document.addEventListener('mousemove', (e) => {
+            if (!heroContent) return;
+            
+            const x = (window.innerWidth / 2 - e.clientX) / 50;
+            const y = (window.innerHeight / 2 - e.clientY) / 50;
+            
+            heroContent.style.transform = `translate(${x}px, ${y}px)`;
+            
+            if (particles) {
+                particles.style.transform = `translate(${x * 2}px, ${y * 2}px)`;
+            }
+        });
+
+        // ===== DEMO INPUT FOCUS EFFECT =====
+        const demoInput = document.querySelector('.demo-input');
+        
+        demoInput.addEventListener('focus', () => {
+            demoInput.parentElement.style.transform = 'scale(1.02)';
+        });
+        
+        demoInput.addEventListener('blur', () => {
+            demoInput.parentElement.style.transform = 'scale(1)';
+        });
+
+        // ===== FORM SUBMISSION =====
+        const emailForm = document.querySelector('.email-signup');
+        
+        emailForm?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const emailInput = emailForm.querySelector('.email-input');
+            if (emailInput.value) {
+                alert(`Thanks for signing up! We'll send magic to ${emailInput.value}`);
+                emailInput.value = '';
+            }
+        });
+    </script>
 </body>
 </html>
