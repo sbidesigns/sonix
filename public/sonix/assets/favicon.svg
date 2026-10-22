@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="50%" style="stop-color:#a855f7"/>
+      <stop offset="100%" style="stop-color:#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0f"/>
+      <stop offset="100%" style="stop-color:#12121a"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100" height="100" rx="22" fill="url(#bgGrad)"/>
+  
+  <!-- Waveform bars - dynamic music feel -->
+  <g transform="translate(50, 50)">
+    <!-- Center tall bar -->
+    <rect x="-3" y="-28" width="6" height="56" rx="3" fill="url(#waveGrad)" opacity="1"/>
+    
+    <!-- Inner bars -->
+    <rect x="-14" y="-18" width="5" height="36" rx="2.5" fill="url(#waveGrad)" opacity="0.9"/>
+    <rect x="9" y="-20" width="5" height="40" rx="2.5" fill="url(#waveGrad)" opacity="0.85"/>
+    
+    <!-- Outer bars -->
+    <rect x="-24" y="-12" width="4" height="24" rx="2" fill="url(#waveGrad)" opacity="0.7"/>
+    <rect x="20" y="-14" width="4" height="28" rx="2" fill="url(#waveGrad)" opacity="0.65"/>
+    
+    <!-- Edge small bars -->
+    <rect x="-33" y="-6" width="3.5" height="12" rx="1.75" fill="url(#waveGrad)" opacity="0.45"/>
+    <rect x="29.5" y="-8" width="3.5" height="16" rx="1.75" fill="url(#waveGrad)" opacity="0.4"/>
+    
+    <!-- Glow effect -->
+    <ellipse cx="0" cy="0" rx="35" ry="38" fill="url(#waveGrad)" opacity="0.15" filter="blur(8px)"/>
+  </g>
+  
+  <!-- Subtle shine overlay -->
+  <rect width="100" height="100" rx="22" fill="white" opacity="0.03"/>
+</svg>

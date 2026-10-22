@@ -14,24 +14,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Z.ai Code Scaffold - AI-Powered Development",
-  description: "Modern Next.js scaffold optimized for AI-powered development with Z.ai. Built with TypeScript, Tailwind CSS, and shadcn/ui.",
-  keywords: ["Z.ai", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "AI development", "React"],
-  authors: [{ name: "Z.ai Team" }],
+  title: "Sonix AI - Professional Music Generator",
+  description: "AI-powered music generation with full song vocals, instrumental tracks, and professional-grade controls. Generate music in seconds.",
+  keywords: ["Sonix", "AI Music", "Music Generator", "Vocals", "Instrumental", "Audio AI"],
+  authors: [{ name: "Sonix AI" }],
   icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+    icon: "/favicon.svg",
+    apple: "/favicon.png",
   },
   openGraph: {
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
-    url: "https://chat.z.ai",
-    siteName: "Z.ai",
+    title: "Sonix AI - Professional Music Generator",
+    description: "Generate full songs with vocals or instrumental tracks using AI",
+    siteName: "Sonix AI",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
+    title: "Sonix AI - Professional Music Generator",
+    description: "AI-powered music generation with vocals & instrumental",
   },
 };
 
