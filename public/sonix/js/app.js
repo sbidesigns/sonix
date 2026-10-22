@@ -10,7 +10,7 @@ import { router, navigateTo } from './core/router.js';
 import { toast } from './ui/toast.js';
 import { Icon } from './ui/icons.js';
 import { detectWebGPU, AVAILABLE_MODELS } from './features/webgpu.js';
-import { Player } from './features/player.js';
+import { AudioPlayer } from './features/player.js';
 
 import * as DashboardModule from './modules/dashboard.js';
 import * as GeneratorModule from './modules/generator.js';
@@ -39,7 +39,7 @@ async function init() {
     handleRoute();
     
     // Init audio player
-    player = new Player();
+    player = new AudioPlayer();
     await player.init();
     
     // Mark loaded
